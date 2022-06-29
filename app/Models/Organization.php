@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Squire\Models\Country;
+
+class Organization extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'account_id');
+    }
+
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class, 'organization_id');
+    }
+
+    public function countryName()
+    {
+        return $this->belongsTo(Country::class, 'country');
+    }
+
+    public function scopeAccount(Builder $builder): Builder
+    {
+        return $builder->whereBelongsTo(auth()->user()->account);
+    }
+}
